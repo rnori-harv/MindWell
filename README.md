@@ -1,2 +1,2 @@
 # MindWell
-AI-Powered Emotion Sentiment Analysis on Journaling
+LLM-Powered Emotion Sentiment Analysis on Your Journal Entries
