@@ -1,8 +1,30 @@
 from django.shortcuts import render
+from dotenv import dotenv_values, load_dotenv, find_dotenv
+import openai
+import os
+import json
+
 
 # Create your views here.
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+
+load_dotenv()
+print(os.environ.keys())
+openai.api_key = os.environ['OPENAI_API_KEY']
+
+def pass_entry_to_openai(text):
+    prompt = "In the following journal entry, analyze my emotions and report the most prevalent ones in the text. \n\n" + text + "\n\nEmotions: "
+    response = openai.Completion.create(
+        engine='text-davinci-003',
+        prompt=prompt,
+        max_tokens=100,
+        temperature=0.7,
+        n=1,
+        stop=None
+    )
+    generated_text = response.choices[0].text.strip()
+    return generated_text
 
 @csrf_exempt
 def create_entry(request):
@@ -10,8 +32,17 @@ def create_entry(request):
         # Your logic to create a new entry goes here
         # You can access the data sent from the frontend using request.POST or request.body
 
+        journal_data = request.body
+        journal_decoded = json.loads(journal_data)
+
+# Now you can access the value using the key
+        entry = journal_decoded['key']
+        print(entry)
+
+        openai_response = pass_entry_to_openai(entry)
+        return JsonResponse({'message': openai_response})
+
         # Return a JsonResponse with a success message
-        return JsonResponse({'message': 'Entry created successfully'})
 
     # If the request method is not POST, return an error message
     return JsonResponse({'error': 'Invalid request method'}, status=400)
