@@ -9,9 +9,6 @@ import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
-load_dotenv()
-print(os.environ.keys())
-openai.api_key = os.environ['OPENAI_API_KEY']
 
 def pass_entry_to_openai(text):
     prompt = "In the following journal entry, analyze my emotions and report the most prevalent ones in the text. \n\n" + text + "\n\nEmotions: "
@@ -46,3 +43,15 @@ def create_entry(request):
 
     # If the request method is not POST, return an error message
     return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+@csrf_exempt
+def submit_api_key(request):
+    if request.method == 'POST':
+        api_key_json = request.body.decode('utf-8')
+        key_loaded = json.loads(api_key_json)
+        api_key = key_loaded['apiKey']
+        print(api_key)
+        openai.api_key = api_key
+        return JsonResponse({'message': 'API key saved successfully'})
+    else:
+        return JsonResponse({'error': 'Invalid request method'})
