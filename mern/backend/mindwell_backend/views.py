@@ -44,14 +44,26 @@ def create_entry(request):
     # If the request method is not POST, return an error message
     return JsonResponse({'error': 'Invalid request method'}, status=400)
 
+def check_api_key(api_key):
+    try:
+        openai.api_key = api_key
+        openai.Engine.list()
+        return True
+    except Exception as e:
+        return False
+    
 @csrf_exempt
 def submit_api_key(request):
     if request.method == 'POST':
         api_key_json = request.body.decode('utf-8')
         key_loaded = json.loads(api_key_json)
         api_key = key_loaded['apiKey']
-        print(api_key)
         openai.api_key = api_key
-        return JsonResponse({'message': 'API key saved successfully'})
+        is_valid = check_api_key(api_key)
+        if is_valid:
+            openai.api_key = api_key
+            return JsonResponse({'status': 'success', 'message': 'API key saved successfully'})
+        else:
+            return JsonResponse({'status': 'error', 'message': 'Invalid API key'})
     else:
-        return JsonResponse({'error': 'Invalid request method'})
+        return JsonResponse({'status': 'error', 'message': 'Invalid Request Method'})
