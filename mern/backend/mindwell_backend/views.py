@@ -11,12 +11,29 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 def pass_entry_to_openai(text):
-    prompt = "In the following journal entry, analyze my emotions and report the most prevalent ones in the text. \n\n" + text + "\n\nEmotions: "
+    prompt = (
+        "In the following journal entry, analyze my emotions and report the most prevalent ones in the text. "
+        "Your response must be formatted in the following manner: "
+        "Emotions displayed in your entry:  (new line)"
+        "1. Emotion 1(new line) "
+        "Instances of emotion 1 in the text: (new line) "
+        "    - Instance 1 (new line)"
+        "    - Instance 2 (new line)"
+        "    - Instance 3 (new line)"
+        "2. Emotion 2(new line)"
+        "- Instances of emotion 2 in the text:(new line)"
+        "    - Instance 1(new line)"
+        "    - Instance 2(new line)"
+        "    - Instance 3(new line) \n"
+        "Only do this for how ever many emotions you find in the text. \n"
+        "Journal Entry: \n"
+        f"{text}"
+    )
     response = openai.Completion.create(
         engine='text-davinci-003',
         prompt=prompt,
         max_tokens=100,
-        temperature=0.7,
+        temperature=0.2,
         n=1,
         stop=None
     )
