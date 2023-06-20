@@ -12,7 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 def pass_entry_to_openai(text):
     prompt = (
-        "In the following journal entry, analyze my emotions and report the most prevalent ones in the text. "
+        "In the following journal entry, analyze my emotions and report the most prevalent ones in the text. If you don't have enough information to make a decision, please say \"Not enough information, please write more!\" \n "
         "Your response must be formatted in the following manner: "
         "Emotions displayed in your entry:  (new line)"
         "1. Emotion 1(new line) "
