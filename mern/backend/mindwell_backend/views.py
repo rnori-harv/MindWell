@@ -9,31 +9,37 @@ import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 
+def format_emotion_response(response_text):
+    emotions = response_text.split('\n')
+    formatted_response = "Emotions displayed in your entry:\n"
+
+    for emotion in emotions:
+        if emotion.strip():
+            formatted_response += f"{emotion}\n"
+
+    return formatted_response
 
 def pass_entry_to_openai(text):
     prompt = (
-        "In the following journal entry, analyze my emotions and report the most prevalent ones in the text. If you don't have enough information to make a decision, please say \"Not enough information, please write more!\" \n "
+        "In the following journal entry, analyze my emotions and report the most prevalent ones in the text. If you don't have enough information to make a decision, please say \"Not enough information, please write more!\". DO NOT hallucinate the journal entry, only use what is given to you. \n "
         "Your response must be formatted in the following manner: "
-        "Emotions displayed in your entry:  (new line)"
-        "1. Emotion 1(new line) "
-        "Instances of emotion 1 in the text: (new line) "
-        "    - Instance 1 (new line)"
-        "    - Instance 2 (new line)"
-        "    - Instance 3 (new line)"
+        "1. Emotion 1: \n"
+        "    - Instance 1 \n"
+        "    - Instance 2 \n"
+        "    - Instance 3 \n"
         "2. Emotion 2(new line)"
-        "- Instances of emotion 2 in the text:(new line)"
-        "    - Instance 1(new line)"
-        "    - Instance 2(new line)"
-        "    - Instance 3(new line) \n"
+        "    - Instance 1 \n"
+        "    - Instance 2 \n"
+        "    - Instance 3 \n"
         "Only do this for how ever many emotions you find in the text. \n"
-        "Journal Entry: \n"
+        "Journal Entry (use only this for the source of your response): \n"
         f"{text}"
     )
     response = openai.Completion.create(
         engine='text-davinci-003',
         prompt=prompt,
-        max_tokens=100,
-        temperature=0.2,
+        max_tokens=250,
+        temperature=0.0,
         n=1,
         stop=None
     )
@@ -54,7 +60,10 @@ def create_entry(request):
         print(entry)
 
         openai_response = pass_entry_to_openai(entry)
-        return JsonResponse({'message': openai_response})
+        formatted_response = format_emotion_response(openai_response)
+        print(formatted_response)
+        return JsonResponse({'message': formatted_response})
+        
 
         # Return a JsonResponse with a success message
 
