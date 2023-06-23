@@ -11,7 +11,7 @@ from django.views.decorators.csrf import csrf_exempt
 
 def format_emotion_response(response_text):
     emotions = response_text.split('\n')
-    formatted_response = "Emotions displayed in your entry:\n"
+    formatted_response = ""
 
     for emotion in emotions:
         if emotion.strip():
@@ -24,13 +24,10 @@ def pass_entry_to_openai(text):
         "In the following journal entry, analyze my emotions and report the most prevalent ones in the text. If you don't have enough information to make a decision, please say \"Not enough information, please write more!\". DO NOT hallucinate the journal entry, only use what is given to you. \n "
         "Your response must be formatted in the following manner: "
         "1. Emotion 1: \n"
-        "    - Instance 1 \n"
-        "    - Instance 2 \n"
-        "    - Instance 3 \n"
-        "2. Emotion 2(new line)"
-        "    - Instance 1 \n"
-        "    - Instance 2 \n"
-        "    - Instance 3 \n"
+        "    - first instance \n"
+        "    - second instance \n"
+        "    - third instance \n"
+        "2. Emotion 2(new line) \n"
         "Only do this for how ever many emotions you find in the text. \n"
         "Journal Entry (use only this for the source of your response): \n"
         f"{text}"
