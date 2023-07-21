@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     'corsheaders',
+    'rest_framework',
     "mindwell_backend"
 ]
 
@@ -135,3 +136,5 @@ CORS_ALLOW_METHODS = [
     'POST',
     'PUT',
 ]
+
+ALLOWED_HOSTS = ['mindwell-backend-d09bc890953b.herokuapp.com']
