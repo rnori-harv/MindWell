@@ -1,6 +1,6 @@
 # MindWell
 LLM-Powered Emotion Sentiment Analysis on Your Journal Entries
-
+Available at https://mindwell-frontend-7d3ca644d9a7.herokuapp.com/
 
 ## How to Launch
 
