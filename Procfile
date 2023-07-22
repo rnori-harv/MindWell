@@ -1,1 +1,1 @@
-web: gunicorn mindwell-backend.wsgi
+web: gunicorn mindwell_backend.wsgi
