@@ -1,3 +1,0 @@
-[submodule "mern/client"]
-	path = mern/client
-	url = https://github.com/rnori-harv/MindWell-Frontend.git
